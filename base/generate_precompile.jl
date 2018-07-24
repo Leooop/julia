@@ -1,5 +1,7 @@
 Base.__init__()
 
+julia_cmd() = (julia = joinpath(Sys.BINDIR, Base.julia_exename()); `$julia`)
+
 function generate_precompilable_package(path)
     pkgname = "Package"
     mkpath(joinpath(path, pkgname, "src"))
@@ -41,11 +43,11 @@ function generate_precompile_statements()
         end
         """
         # Do not redirect stdin unless it is to a tty, because that changes code paths
-        run(pipeline(`$(Base.julia_cmd()) --sysimage $sysimg.ji -O0
-                     --startup-file=no --q -e $setup -i`))
+        run(pipeline(`$(julia_cmd()) --sysimage $sysimg.ji -O0
+                     --startup-file=no --q -e $setup -i`; stderr=tmp))
     else
         # No REPL, just record the startup
-        run(pipeline(`$(Base.julia_cmd()) --sysimage $sysimg.ji --trace-compile=yes -O0
+        run(pipeline(`$(julia_cmd()) --sysimage $sysimg.ji --trace-compile=yes -O0
                      --startup-file=no --q -e0`; stderr=tmp))
     end
 
