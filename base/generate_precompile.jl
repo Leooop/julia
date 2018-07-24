@@ -41,8 +41,8 @@ function generate_precompile_statements()
         end
         """
         # Do not redirect stdin unless it is to a tty, because that changes code paths
-        run(pipeline(`$(Base.julia_cmd()) --sysimage $sysimg.ji --trace-compile=yes -O0
-                     --startup-file=no --q -e $setup -i`; stderr=tmp))
+        run(pipeline(`$(Base.julia_cmd()) --sysimage $sysimg.ji -O0
+                     --startup-file=no --q -e $setup -i`))
     else
         # No REPL, just record the startup
         run(pipeline(`$(Base.julia_cmd()) --sysimage $sysimg.ji --trace-compile=yes -O0
